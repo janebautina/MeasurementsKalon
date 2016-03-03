@@ -17,9 +17,8 @@ class MeasurementsKalon extends Module{
 	{
 		if (!parent::install() ||
 			!$this->registerHook('displayCustomerAccount') ||
-			!$this->registerHook('displayMyAccountBlock'))
-
-			return false;
+			!$this->registerHook('displayMyAccountBlock') ||
+			!$this->registerHook('myNewCoolHook')) return false;
 
 		
 			$sql = 'CREATE TABLE IF NOT EXISTS `ps_measurementskalon`
@@ -32,6 +31,7 @@ class MeasurementsKalon extends Module{
 					`high_hip` decimal(4,2) unsigned NOT NULL,
 					`hip` decimal(4,2) unsigned NOT NULL,
 					`height` decimal(4,2) unsigned NOT NULL,
+					`isChecked` bool NOT NULL,
 					PRIMARY KEY  (`id_customer`)
 				) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
 
@@ -61,8 +61,8 @@ class MeasurementsKalon extends Module{
 	}
 	public function hookDisplayCustomerAccount($params)
 	{
-		$this->processProductTabContent();
-		$this->assingProductTabContent();
+		$this->processDisplayCustomerAccount();
+		$this->assingDisplayCustomerAccount();
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 	
@@ -70,7 +70,12 @@ class MeasurementsKalon extends Module{
 	{
 		return $this->hookDisplayCustomerAccount($params);
 	}
-	public function processProductTabContent(){
+    public function hookmyNewCoolHook($params) {
+    	$this->assingDisplayCustomerAccount();
+    	return $this->display(__FILE__, 'measurementskalontabcomments.tpl');
+    }
+  
+	public function processDisplayCustomerAccount(){
 			if(Tools::isSubmit('measurementskalon_submit')) {
 				$id_customer = $this->context->customer->id;
 				$over_bust = Tools::getValue('over_bust');
@@ -80,18 +85,33 @@ class MeasurementsKalon extends Module{
 				$high_hip = Tools::getValue('high_hip');
 				$hip = Tools::getValue('hip');
 				$height = Tools::getValue('height');
-				if ()
-				$insert = array('id_customer' => (int)$id_customer, 'over_bust' =>(float)pSQL($over_bust), 'bust' =>(float)pSQL($bust), 'under_bust' => (float)pSQL($under_bust), 'waist' => (float)$waist, 'high_hip'=>(float)pSQL($high_hip), 'hip'=>(float)pSQL($hip), 'height' => (float)pSQL($height));
+				$isChecked = Tools::getValue('yesmeasurementssubmit');
+				Db::getInstance()->executeS('SELECT * FROM `ps_measurementskalon` WHERE `id_customer`='.(int)$id_customer.'');
+				$insert = array('id_customer' => (int)$id_customer, 'over_bust' =>(float)pSQL($over_bust), 'bust' =>(float)pSQL($bust), 'under_bust' => (float)pSQL($under_bust), 'waist' => (float)$waist, 'high_hip'=>(float)pSQL($high_hip), 'hip'=>(float)pSQL($hip), 'height' => (float)pSQL($height),'isChecked'=>(boolean)pSQL($isChecked));
 				Db::getInstance()->insert('measurementskalon', $insert);
 			}
+
+			if(Tools::isSubmit('measurementskalon_edit_submit')) {
+				$id_customer = $this->context->customer->id;
+				$over_bust = Tools::getValue('over_bust_edit');
+				$bust = Tools::getValue('bust_edit');
+				$under_bust = Tools::getValue('under_bust_edit');
+				$waist = Tools::getValue('waist_edit');
+				$high_hip = Tools::getValue('high_hip_edit');
+				$hip = Tools::getValue('hip_edit');
+				$height = Tools::getValue('height_edit');
+				$isChecked = Tools::getValue('yesmeasurementsedit');
+				Db::getInstance()->delete('ps_measurementskalon', '`id_customer`=' .(int)$id_customer.'');
+				$insert = array('id_customer' => (int)$id_customer, 'over_bust' =>(float)pSQL($over_bust), 'bust' =>(float)pSQL($bust), 'under_bust' => (float)pSQL($under_bust), 'waist' => (float)$waist, 'high_hip'=>(float)pSQL($high_hip), 'hip'=>(float)pSQL($hip), 'height' => (float)pSQL($height), 'isChecked'=>(boolean)pSQL($isChecked));
+				Db::getInstance()->insert('measurementskalon', $insert);
+
+			}
 	}
-	public function assingProductTabContent(){
+	public function assingDisplayCustomerAccount(){
 		$id_customer = $this->context->customer->id;
 		$measurements = Db::getInstance()->executeS('SELECT * FROM `ps_measurementskalon` WHERE `id_customer`='.(int)$id_customer.'');
 		$this->context->smarty->assign("measurements", $measurements);
-		$this->context->smarty->assign("measurementskalon", $measurementskalon);
 	}
-
 
 }
 ?>
