@@ -71,7 +71,9 @@ class MeasurementsKalon extends Module{
 		return $this->hookDisplayCustomerAccount($params);
 	}
     public function hookmyNewCoolHook($params) {
-    	$this->assingDisplayCustomerAccount();
+    	$id_customer = $params['id_customer_comments'];
+    	$measurements = Db::getInstance()->executeS('SELECT * FROM `ps_measurementskalon` WHERE `id_customer`='.(int)$id_customer.'');
+    	$this->context->smarty->assign("measurements", $measurements);
     	return $this->display(__FILE__, 'measurementskalontabcomments.tpl');
     }
   
