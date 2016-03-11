@@ -1,6 +1,6 @@
 #Measurements Kalon 
-## *This is a prestashop module developed fot the [Kalon Clothing](http://www.kalonclothing.com/)*
-### How does MeasurmentsKalon module work?
+## *This is a prestashop module developed for the [Kalon Clothing](http://www.kalonclothing.com/)*
+### How does MeasurementsKalon module work?
 It adds to the customer account page a new link called "My Measurements"
 
 ![My Account Page](github1.JPG)
