@@ -3,11 +3,11 @@
 ### How does MeasurementsKalon module work?
 It adds to the customer account page a new link called "My Measurements"
 
-![My Account Page](github1.JPG)
+![My Account Page](myaccount.JPG)
 
 Users are able to add their measurements onto the site and choose whether they want to hide or show in comments.
 
-![Product Comments Page](github.JPG)
+![Product Comments Page](comments.JPG)
 
 ###Installation:
 1. Make a folder called measurementskalon on your local machine and clone this github repository there. 
