@@ -1,17 +1,19 @@
 <?php
  
 class MeasurementsKalon extends Module{
+	//here you make important initializations
 	public function __construct()
 	{
-		$this->name = 'MeasurementsKalon';
+		$this->name = 'MeasurementsKalon'; //measurements kalon in the book
 		$this->tab = 'front_office_features';
 		$this->version = '1.0';
 		$this->author = 'Evgeniya Bautina';
 		#$this->controllers = array('account');
-		$this->bootstrap = true;
+		//set the Bootsrap
+		$this->bootstrap = true; 
 		parent::__construct();
 		$this->displayName = 'Measurements Kalon';
-		$this->description = 'Save customers Measurements';
+		$this->description = 'This module will save customers measurements and display them in comments';
 	}
 	public function install()
 	{
@@ -61,8 +63,6 @@ class MeasurementsKalon extends Module{
 	}
 	public function hookDisplayCustomerAccount($params)
 	{
-		$this->processDisplayCustomerAccount();
-		$this->assingDisplayCustomerAccount();
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 	
@@ -76,44 +76,5 @@ class MeasurementsKalon extends Module{
     	$this->context->smarty->assign("measurements", $measurements);
     	return $this->display(__FILE__, 'measurementskalontabcomments.tpl');
     }
-  
-	public function processDisplayCustomerAccount(){
-			if(Tools::isSubmit('measurementskalon_submit')) {
-				$id_customer = $this->context->customer->id;
-				$over_bust = Tools::getValue('over_bust');
-				$bust = Tools::getValue('bust');
-				$under_bust = Tools::getValue('under_bust');
-				$waist = Tools::getValue('waist');
-				$high_hip = Tools::getValue('high_hip');
-				$hip = Tools::getValue('hip');
-				$height = Tools::getValue('height');
-				$isChecked = Tools::getValue('yesmeasurementssubmit');
-				Db::getInstance()->executeS('SELECT * FROM `ps_measurementskalon` WHERE `id_customer`='.(int)$id_customer.'');
-				$insert = array('id_customer' => (int)$id_customer, 'over_bust' =>(float)pSQL($over_bust), 'bust' =>(float)pSQL($bust), 'under_bust' => (float)pSQL($under_bust), 'waist' => (float)$waist, 'high_hip'=>(float)pSQL($high_hip), 'hip'=>(float)pSQL($hip), 'height' => (float)pSQL($height),'isChecked'=>(boolean)pSQL($isChecked));
-				Db::getInstance()->insert('measurementskalon', $insert);
-			}
-
-			if(Tools::isSubmit('measurementskalon_edit_submit')) {
-				$id_customer = $this->context->customer->id;
-				$over_bust = Tools::getValue('over_bust_edit');
-				$bust = Tools::getValue('bust_edit');
-				$under_bust = Tools::getValue('under_bust_edit');
-				$waist = Tools::getValue('waist_edit');
-				$high_hip = Tools::getValue('high_hip_edit');
-				$hip = Tools::getValue('hip_edit');
-				$height = Tools::getValue('height_edit');
-				$isChecked = Tools::getValue('yesmeasurementsedit');
-				Db::getInstance()->delete('ps_measurementskalon', '`id_customer`=' .(int)$id_customer.'');
-				$insert = array('id_customer' => (int)$id_customer, 'over_bust' =>(float)pSQL($over_bust), 'bust' =>(float)pSQL($bust), 'under_bust' => (float)pSQL($under_bust), 'waist' => (float)$waist, 'high_hip'=>(float)pSQL($high_hip), 'hip'=>(float)pSQL($hip), 'height' => (float)pSQL($height), 'isChecked'=>(boolean)pSQL($isChecked));
-				Db::getInstance()->insert('measurementskalon', $insert);
-
-			}
-	}
-	public function assingDisplayCustomerAccount(){
-		$id_customer = $this->context->customer->id;
-		$measurements = Db::getInstance()->executeS('SELECT * FROM `ps_measurementskalon` WHERE `id_customer`='.(int)$id_customer.'');
-		$this->context->smarty->assign("measurements", $measurements);
-	}
-
 }
 ?>
